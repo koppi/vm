@@ -1,0 +1,80 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+
+  linux:
+    runs-on: ubuntu-22.04
+    name: Linux
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build project using docker
+        run: |
+          docker buildx build . -f dist/linux.Dockerfile --progress=plain --output out
+      - name: Rename executable
+        run: |
+          mv out/vm out/vm-linux
+          sync
+      - name: Publish release
+        uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631
+        with:
+          files: |
+            out/vm-linux
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  macos:
+    runs-on: macos-13
+    name: MacOS
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Install Qt 6
+      run: brew install qt@6
+    - name: Build project
+      run: |
+        cmake --preset release
+        cmake --build --parallel 5 --preset vm-release
+    - name: Rename executable
+      run: |
+        mv build/release/vm build/release/vm-macos
+        sync
+    - name: Publish release
+      uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631
+      with:
+        files: build/release/vm-macos
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+  windows:
+    runs-on: windows-2022
+    name: Windows
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Install Qt 6
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: "6.9.0"
+        cache: 'true'
+    - name: Configure build
+      run: |
+        cmake -DCMAKE_PREFIX_PATH="C:\a\hello\Qt\6.9.0\msvc2022_64\" -DCI= --preset release-windows
+    - name: Execute build
+      run: |
+        cmake --build --parallel 5 --preset vm-release-windows
+    - name: Rename executable
+      run: |
+        cp build\release-windows\Release\vm.exe build/vm-x64.exe
+    - name: Publish release
+      uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631
+      with:
+        files: |
+          build/vm-x64.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

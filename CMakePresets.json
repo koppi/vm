@@ -1,0 +1,77 @@
+{
+	"version": 6,
+	"configurePresets": [
+		{
+			"name": "common",
+			"hidden": true,
+			"generator": "Ninja",
+			"binaryDir": "build/${presetName}"
+		},
+		{
+			"name": "debug",
+			"displayName": "Configure Debug",
+			"inherits": "common",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
+			}
+		},
+		{
+			"name": "release",
+			"displayName": "Configure Release",
+			"inherits": "common",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release"
+			}
+		},
+		{
+			"name": "common-windows",
+			"hidden": true,
+			"generator": "Visual Studio 17 2022",
+			"binaryDir": "build/${presetName}"
+		},
+		{
+			"name": "debug-windows",
+			"displayName": "Configure Debug Windows",
+			"inherits": "common-windows",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
+			}
+		},
+		{
+			"name": "release-windows",
+			"displayName": "Configure Release Windows",
+			"inherits": "common-windows",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release"
+			}
+		}
+	],
+	"buildPresets": [
+		{
+			"name": "debug",
+			"displayName": "Build Debug",
+			"configurePreset": "debug",
+			"configuration": "Debug"
+		},
+		{
+			"name": "release",
+			"displayName": "Build Release",
+			"configurePreset": "release",
+			"configuration": "Release",
+			"targets": ["vm"]
+		},
+		{
+			"name": "debug-windows",
+			"displayName": "Build Debug Windows",
+			"configurePreset": "debug-windows",
+			"configuration": "Debug"
+		},
+		{
+			"name": "release-windows",
+			"displayName": "Build Release Windows",
+			"configurePreset": "release-windows",
+			"configuration": "Release",
+			"targets": ["vm"]
+		}
+  ]
+}

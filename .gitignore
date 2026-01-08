@@ -1,0 +1,33 @@
+# Qt build artefacts
+*.o
+moc_*.cpp
+moc_*.h
+ui_*
+*.a
+*.pro.user*
+.qmake.stash
+Makefile
+
+# Final executable
+vm
+
+# Debug files
+*.gdb
+
+# IDE files
+.vscode/
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*~
+*.tmp
+*.bak
+
+# Build directories
+build/
+debug/
+release/
